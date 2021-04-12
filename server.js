@@ -23,9 +23,6 @@ app.get('/api/health', (req, res) => {
 
 // Encryption Endpoint
 app.get('/api/encrypt/:stringToEncrypt', (req, res) => {
-  //if(error){
-    //res.status(500).end(stringifyFailedValueToRetrieve("Something went wrong: " + error));
-  //}
   res.setHeader('Content-Type', 'application/json');
   var input = req.params.stringToEncrypt;
   if(!validateInput(input)){
@@ -37,9 +34,6 @@ app.get('/api/encrypt/:stringToEncrypt', (req, res) => {
 
 // Decryption Endpoint
 app.get('/api/decrypt/:stringToDecrypt', (req, res) => {
-  //if(error){
-    //res.status(500).end(stringifyFailedValueToRetrieve("Something went wrong: " + error));
-  //}
   res.setHeader('Content-Type', 'application/json');
   var input = req.params.stringToDecrypt;
   if(!validateInput(input)){
@@ -49,9 +43,14 @@ app.get('/api/decrypt/:stringToDecrypt', (req, res) => {
   res.status(200).end(stringifySuccessfulValueToRetrieve(input,result));
 });
 
-//app.get('/*', function (req, res) {
-//  res.sendStatus(404);
-//})
+app.get('/*', function (req, res) {
+  res.sendStatus(404);
+})
+
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.sendStatus(500);
+});
 
 // Encryption Function Implementation
 function encrypt(string){
@@ -87,16 +86,6 @@ function stringifyFailedValueToRetrieve(input, error){
   }, null, 3);
 }
 
-// Format failed response message to be wrapped in JSON
-function stringifyFailedValueToRetrieve(error){
-  return JSON.stringify({
-    "Input": "",
-    "Output": "", 
-    "Status": "error", 
-    "Message": error
-  }, null, 3);
-}
-
 // Validate input is a string
 function validateInput(input){
   return typeof input === 'string' || input instanceof String;
@@ -109,3 +98,5 @@ app.listen(PORT, HOST, () => {
 });
 
 console.log(`Running on http://${HOST}:${PORT}`);
+
+module.exports = app;
