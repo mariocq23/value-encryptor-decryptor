@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: value-encryptor-decryptor
+  namespace: mariocq
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: value-encryptor-decryptor
+      zone: production
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 10
+      maxSurge: 1
+  revisionHistoryLimit: 5
+  minReadySecondsLimit: 10 # wait for 10 seconds before deploying next container
+
+  template:
+    metadata:
+      labels:
+        app: value-encryptor-decryptor
+        zone: production
+    spec:
+      containers:
+      - name: value-encryptor-decryptor
+        imagePullPolicy: Always
+        image: mariocq/value-encryptor-decryptor
+resources:
+          limits:
+            cpu: "0.2"
+            memory: "256M"
+          requests:
+            cpu: "0.1"
+            memory: "128M"
+        ports:
+        - contaierPort: 8080
+
+
+readinessProbe:
+          failureThreshold: 3 # tries before reporting failure
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 10 # number of seconds after a container has started before running container pods
+ periodSeconds: 10 # probe interval default 10 seconds
+          successThreshold: 3 # tries before reporting succesful
+          timeoutSeconds: 10
+
+        livenessProbe:
+          failureThreshold: 3 # tries before reporting the failure
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 10
