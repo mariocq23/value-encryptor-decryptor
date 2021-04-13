@@ -23,6 +23,42 @@ You can either follow the previous steps for installation or run the uploaded do
 docker run -p 49160:8080 -it mariocq/value-encryptor-decryptor 
 ```
 
+## Testing
+
+Run npm test command in project directory
+ 
+```bash
+npm test
+
+> value-encryptor-decryptor@0.0.0 test
+> jest --detectOpenHandles --coverage
+
+  console.log
+    Running on http://0.0.0.0:8080
+
+      at Object.<anonymous> (server.js:100:9)
+
+ PASS  test/server.spec.js
+  GET /api/encrypt
+    ✓ retrieves encrypted text wrapped in json (120 ms)
+  GET /api/decrypt
+    ✓ retrieves decrypted text wrapped in json (14 ms)
+  GET /api/health
+    ✓ is healthy (15 ms)
+
+-----------|---------|----------|---------|---------|-------------------
+File       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------|---------|----------|---------|---------|-------------------
+All files  |   85.71 |       50 |   72.73 |   85.71 |                   
+ server.js |   85.71 |       50 |   72.73 |   85.71 | 29,40,47,51-52,81 
+-----------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        1.677 s, estimated 2 s
+Ran all test suites.
+```
+
 ## Usage
 If you wish to encrypt or decrypt a string with special characters make sure of substituting them with their ANSI code equivalent. For example -> For "space" => %20
 
